@@ -13,6 +13,7 @@ Router.get("/", verifyAuth, async (req, res) => {
 
 // Route2: Add a product in the list 
 Router.post("/add-product",verifyAuth, async (req, res) => {
+try {
   const { name, brand, category, price } = req.body;
   if (!name || !brand || !category || !price) {
     return res.json({
@@ -28,11 +29,15 @@ Router.post("/add-product",verifyAuth, async (req, res) => {
     const product = await Product.create(req.body);
     res.json({ success: true, msg: `${req.body.name} added sucessfully` });
   }
+} catch (error) {
+  res.status(500);
+}
 });
 
 // Route3: Delete and update product via params 
 Router.route("/product/:id")
   .delete(verifyAuth, async (req, res) => {
+   try {
     const product = await Product.findOne({ _id: req.params.id });
     if (product) {
       const result = await Product.deleteOne({ _id: req.params.id });
@@ -40,25 +45,37 @@ Router.route("/product/:id")
     } else {
       res.json({ success: false, msg: `No such product exists` });
     }
+   } catch (error) {
+    res.status(500);
+   }
   })
   .put(verifyAuth, async (req, res) => {
+   try {
     const result = await Product.updateOne(
       { _id: req.params.id },
       { $set: req.body }
     );
     res.json({ success: true, result });
+   } catch (error) {
+    res.status(500);
+   }
   })
   .get(verifyAuth, async (req, res) => {
+  try {
     const product = await Product.findOne({ _id: req.params.id });
     if (product) {
       res.json({ success: true, product });
     } else {
       res.json({ success: false, msg: `No such product exists` });
     }
+  } catch (error) {
+    res.status(500);
+  }
   });
 
   // Route4: Searching products via params 
 Router.get("/search/:key", verifyAuth, async (req, res) => {
+ try {
   const product = await Product.find({
     $or: [
       { name: { $regex: req.params.key, $options: "i" } },
@@ -71,6 +88,9 @@ Router.get("/search/:key", verifyAuth, async (req, res) => {
   } else {
     res.json({ success: false, msg: `No such product exists` });
   }
+ } catch (error) {
+  res.status(500);
+ }
 });
 
 module.exports = Router;

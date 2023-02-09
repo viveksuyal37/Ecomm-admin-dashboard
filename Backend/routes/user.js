@@ -45,6 +45,7 @@ Router.post(
 //Route2: User Login
 
 Router.post("/login", async (req, res) => {
+ try {
   const { email, password } = req.body;
 
   if (!email || !password)
@@ -82,6 +83,9 @@ Router.post("/login", async (req, res) => {
   } else {
     res.json({ success: false, msg: "No such user found" });
   }
+ } catch (error) {
+  res.json({ success: false, msg: `${error}` });
+ }
 });
 
 //Route3: User CRUD operations using userid in params
