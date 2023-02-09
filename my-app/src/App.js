@@ -11,7 +11,7 @@ import Profile from "./Components/Profile";
 import { PrivateRoute } from "./Components/PrivateRoute";
 import axios from "axios";
 
-axios.defaults.baseURL = "https://dashboard-backend-crr9.onrender.com";
+axios.defaults.baseURL = "https://dashboard-backend-76gy.onrender.com";
 
 function App() {
   return (
